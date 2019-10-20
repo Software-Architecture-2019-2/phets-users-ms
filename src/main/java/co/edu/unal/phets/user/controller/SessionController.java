@@ -33,4 +33,12 @@ public class SessionController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "destroy", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<TokenValidDTO> destroyToken(@RequestBody TokenDTO tokenDto) {
+        sessionService.destroyToken(tokenDto.getToken());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
