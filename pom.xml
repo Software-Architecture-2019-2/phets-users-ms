@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>co.edu.unal.phets</groupId>
-    <artifactId>user-ms</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-    <name>user-ms</name>
+    <artifactId>phets-users-ms</artifactId>
+	<version>1</version>
+    <name>phets-users-ms</name>
 	<description>User managment microservice por Phets Software System</description>
 
 	<properties>

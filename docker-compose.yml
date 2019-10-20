@@ -1,0 +1,35 @@
+version: "2.1"
+services:
+  phets-users-ms:
+    container_name: phets-users-ms
+    build: .
+    ports:
+      - "4006:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3006/user?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: phets-user
+      SPRING_DATASOURCE_PASSWORD: phets-password
+    depends_on:
+      phets-users-db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl -I phets-users-ms:4006/user --fail"
+      interval: 20s
+      retries: 10
+  phets-users-db:
+    image: mariadb:latest
+    container_name: phets-users-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ph375-u53r5
+      MYSQL_DATABASE: user
+      MYSQL_USER: phets-user
+      MYSQL_PASSWORD: phets-password
+    ports:
+      - "3006:3306"
+    volumes:
+     - /tmp/phets-users-db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 20s
+      timeout: 5s
+      retries: 15
