@@ -83,7 +83,7 @@ public class User implements Serializable {
     private Boolean confirmed = false;
 
     @NotNull
-    @Column
+    @Column(updatable = false)
     private Date creation;
 
     @Size(min = 36, max = 36)
