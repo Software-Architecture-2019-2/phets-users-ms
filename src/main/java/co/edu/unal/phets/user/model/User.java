@@ -1,17 +1,19 @@
 package co.edu.unal.phets.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -26,15 +28,12 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Table(
-        name = "users",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"id", "username"})
-)
+@Table(name = "users")
 public class User implements Serializable {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
+    @GeneratedValue
     private Long id;
 
     @NotNull
@@ -49,45 +48,54 @@ public class User implements Serializable {
 
     @NotNull
     @Size(min = 3, max = 15)
-    @Column(name = "username")
+    @Column(updatable = false, unique = true)
     private String username;
 
     @NotNull
+    @Size(min = 7, max = 50)
+    @Column(unique = true)
+    private String email;
+
+    @NotNull
     @Size(min = 8, max = 30)
-    @Column(name = "password")
+    @Column
     private String password;
 
     @Size(min = 8, max = 300)
-    @Column(name = "description")
+    @Column
     private String description;
 
     @NotNull
     @Size(min = 3, max = 30)
-    @Column(name = "city")
+    @Column
     private String city;
 
     @NotNull
-    @Column(name = "latitude")
+    @Column
     private Double latitude;
 
     @NotNull
-    @Column(name = "longitude")
+    @Column
     private Double longitude;
 
     @NonNull
-    @Column(name = "confirmed", columnDefinition = "boolean default true")
+    @Column(columnDefinition = "boolean default true")
     private Boolean confirmed = false;
 
     @NotNull
-    @Column(name = "creation")
+    @Column
     private Date creation;
 
     @Size(min = 36, max = 36)
-    @Column(name = "media")
+    @Column
     private String media;
 
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
+
+    @JsonIgnore
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Session> sessions;
 
 }

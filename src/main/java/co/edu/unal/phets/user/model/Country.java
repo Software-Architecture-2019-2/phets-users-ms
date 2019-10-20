@@ -27,13 +27,13 @@ import lombok.RequiredArgsConstructor;
 public class Country implements Serializable {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
+    @GeneratedValue
     private Long id;
 
     @NonNull
     @Size(min = 3, max = 30)
-    @Column(name = "name")
+    @Column
     private String name;
 
 }

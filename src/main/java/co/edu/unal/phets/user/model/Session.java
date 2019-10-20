@@ -30,23 +30,23 @@ import lombok.NonNull;
 public class Session implements Serializable {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
+    @GeneratedValue
     private Long id;
 
     @NonNull
-    @Size(min = 100, max = 500)
-    @Column(name = "token")
+    @NotNull
+    @Column(unique = true, updatable = false)
     private String token;
 
     @NotNull
-    @Column(name = "valid", columnDefinition = "boolean default true")
+    @Column(columnDefinition = "boolean default true")
     private Boolean valid = true;
 
     @NotNull
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", updatable = false)
     private User user;
 
 }
