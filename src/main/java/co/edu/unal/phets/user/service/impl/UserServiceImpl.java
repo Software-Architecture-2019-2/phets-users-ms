@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> savedOpt = userRepository.findByUsername(username);
         if (savedOpt.isPresent()) {
             User saved = savedOpt.get();
-            BeanUtils.copyProperties(user, saved, "creation", "confirmed");
+            BeanUtils.copyProperties(user, saved, "creation", "confirmed", "user");
             User updated = userRepository.save(saved);
             return updated;
         }
