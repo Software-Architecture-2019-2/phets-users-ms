@@ -7,6 +7,7 @@ import co.edu.unal.phets.user.service.SessionService;
 import co.edu.unal.phets.user.service.UserService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,13 +26,16 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private SessionService sessionService;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @Override
     public User register(User user) {
         String encryptedPass = encryptPassword(user.getPassword());
         user.setPassword(encryptedPass);
+        System.out.println(encryptedPass.length());
         return userService.create(user);
     }
-    
+
     @Override
     public Optional<String> login(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
@@ -43,13 +47,12 @@ public class AuthServiceImpl implements AuthService {
         }
         return Optional.empty();
     }
-    
+
     private String encryptPassword(String password) {
-        return password + "-";
+        return encoder.encode(password);
     }
 
     private Boolean validCredentials(User user, String password) {
-        String encryptedPass = encryptPassword(password);
-        return user.getPassword().equals(encryptedPass);
+        return encoder.matches(password, user.getPassword());
     }
 }
