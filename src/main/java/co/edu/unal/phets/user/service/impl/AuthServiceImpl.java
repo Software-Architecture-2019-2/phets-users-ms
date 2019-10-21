@@ -32,7 +32,6 @@ public class AuthServiceImpl implements AuthService {
     public User register(User user) {
         String encryptedPass = encryptPassword(user.getPassword());
         user.setPassword(encryptedPass);
-        System.out.println(encryptedPass.length());
         return userService.create(user);
     }
 
