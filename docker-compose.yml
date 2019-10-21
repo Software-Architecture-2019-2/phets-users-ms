@@ -29,7 +29,7 @@ services:
     volumes:
      - /tmp/phets-users-db:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER
       interval: 20s
       timeout: 5s
       retries: 15
