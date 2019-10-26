@@ -61,7 +61,7 @@ public class User implements Serializable {
     @Column
     private String password;
 
-    @Size(min = 8, max = 300)
+    @Size(min = 1, max = 300)
     @Column
     private String description;
 
