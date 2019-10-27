@@ -17,8 +17,15 @@ services:
       interval: 20s
       retries: 10
   phets-users-db:
-    image: mariadb:latest
+    image: mysql:5.7
     container_name: phets-users-db
+    healthcheck:
+      test: "mysqlcheck -u$$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE"
+      interval: 20s
+      timeout: 5s
+      retries: 15
+    volumes:
+      - phets-users-db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ph375-u53r5
       MYSQL_DATABASE: user
@@ -26,10 +33,6 @@ services:
       MYSQL_PASSWORD: phets-password
     ports:
       - "3006:3306"
-    volumes:
-     - /tmp/phets-users-db:/var/lib/mysql
-    healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER
-      interval: 20s
-      timeout: 5s
-      retries: 15
+
+volumes:
+  phets-users-db:
