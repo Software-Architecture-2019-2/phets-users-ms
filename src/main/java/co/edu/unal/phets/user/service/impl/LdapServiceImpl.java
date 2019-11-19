@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LdapServiceImpl implements LdapService {
 
-    private LDAPConnection lc = new LDAPConnection();
+    private final String CONTAINER_NAME = "dc=phets,dc=com";
+    private final LDAPConnection LC = new LDAPConnection();
 
     @Override
     public Boolean login(String user, String password) {
@@ -18,33 +19,59 @@ public class LdapServiceImpl implements LdapService {
         return false;
     }
 
+    @Override
+    public Boolean register(String givenName, String surname, String username, String password) {
+        LDAPAttributeSet attributeSet = new LDAPAttributeSet();
+
+        attributeSet.add(new LDAPAttribute(
+                "objectclass", new String("inetOrgPerson")));
+        attributeSet.add(new LDAPAttribute("cn", username));
+        attributeSet.add(new LDAPAttribute("givenname", givenName));
+        attributeSet.add(new LDAPAttribute("sn", surname));
+        attributeSet.add(new LDAPAttribute("userpassword", password));
+
+        String dn = "cn=" + username + ",ou=phets," + CONTAINER_NAME;
+        LDAPEntry entry = new LDAPEntry(dn, attributeSet);
+
+        if (connect()) {
+            try {
+                LC.add(entry);
+                return true;
+            } catch (LDAPException ex) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     private Boolean connect() {
+        if (LC.isConnected()) {
+            return true;
+        }
 
         String ldapHost = System.getenv("LDAP_IP");
-        String dn = "cn=admin,dc=phets,dc=com";
+        String dn = "cn=admin," + CONTAINER_NAME;
         String password = "admin";
 
         int ldapPort = LDAPConnection.DEFAULT_PORT;
         int ldapVersion = LDAPConnection.LDAP_V3;
 
         try {
-            lc.connect(ldapHost, ldapPort);
-            System.out.println("Connecting to LDAP Server...");
-            lc.bind(ldapVersion, dn, password.getBytes("UTF8"));
-            System.out.println("Authenticated in LDAP Server...");
+            LC.connect(ldapHost, ldapPort);
+            LC.bind(ldapVersion, dn, password.getBytes("UTF8"));
             return true;
         } catch (LDAPException | UnsupportedEncodingException ex) {
-            System.out.println("ERROR when connecting to LDAP Server...");
             return false;
         }
     }
 
     private Boolean validateUser(String username, String password) {
-        String dn = "cn=" + username + ",ou=phets,dc=phets,dc=com";
+        String dn = "cn=" + username + ",ou=phets," + CONTAINER_NAME;
         try {
-            lc.bind(LDAPConnection.LDAP_V3, dn, password.getBytes());
+            LC.bind(LDAPConnection.LDAP_V3, dn, password.getBytes("UTF8"));
             return true;
-        } catch (LDAPException ex) {
+        } catch (LDAPException | UnsupportedEncodingException ex) {
             return false;
         }
     }

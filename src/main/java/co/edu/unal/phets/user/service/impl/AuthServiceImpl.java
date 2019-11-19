@@ -35,9 +35,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User register(User user) {
-        String encryptedPass = bCryptUtil.encryptPassword(user.getPassword());
-        user.setPassword(encryptedPass);
-        return userService.create(user);
+        Boolean registered = ldapService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword());
+        if (registered) {   
+            String encryptedPass = bCryptUtil.encryptPassword(user.getPassword());
+            user.setPassword(encryptedPass);
+            return userService.create(user);
+        }
+        return null;
     }
 
     @Override
