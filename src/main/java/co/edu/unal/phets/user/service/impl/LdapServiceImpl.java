@@ -20,7 +20,7 @@ public class LdapServiceImpl implements LdapService {
 
     private Boolean connect() {
 
-        String ldapHost = "host.docker.internal";
+        String ldapHost = System.getenv("LDAP_IP");
         String dn = "cn=admin,dc=phets,dc=com";
         String password = "admin";
 

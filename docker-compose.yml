@@ -6,6 +6,7 @@ services:
     ports:
       - "4006:8080"
     environment:
+      LDAP_IP: 172.17.0.1
       SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3006/user?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: phets-user
       SPRING_DATASOURCE_PASSWORD: phets-password
