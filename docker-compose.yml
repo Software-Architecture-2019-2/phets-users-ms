@@ -4,7 +4,7 @@ services:
     container_name: phets-users-ms
     build: .
     ports:
-      - "4006:8080"
+      - "4006:4006"
     environment:
       LDAP_IP: 172.17.0.1
       SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3006/user?createDatabaseIfNotExist=true
