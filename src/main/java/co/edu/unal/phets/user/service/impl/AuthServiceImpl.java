@@ -3,6 +3,7 @@ package co.edu.unal.phets.user.service.impl;
 import co.edu.unal.phets.user.model.User;
 import co.edu.unal.phets.user.repository.UserRepository;
 import co.edu.unal.phets.user.service.AuthService;
+import co.edu.unal.phets.user.service.LdapService;
 import co.edu.unal.phets.user.service.SessionService;
 import co.edu.unal.phets.user.service.UserService;
 import co.edu.unal.phets.user.util.BCryptUtil;
@@ -19,6 +20,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private BCryptUtil bCryptUtil;
+
+    @Autowired
+    private LdapService ldapService;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,11 +42,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Optional<String> login(String username, String password) {
-        Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
+        if (ldapService.login(username, password)) {
+            Optional<User> userOpt = userRepository.findByUsername(username);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
                 if (bCryptUtil.validCredentials(user, password)) {
-                return Optional.of(sessionService.getToken(user));
+                    return Optional.of(sessionService.getToken(user));
+                }
             }
         }
         return Optional.empty();
