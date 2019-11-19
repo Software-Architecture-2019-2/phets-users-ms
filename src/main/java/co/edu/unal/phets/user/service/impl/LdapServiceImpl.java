@@ -3,14 +3,12 @@ package co.edu.unal.phets.user.service.impl;
 import co.edu.unal.phets.user.service.LdapService;
 import com.novell.ldap.*;
 import java.io.UnsupportedEncodingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LdapServiceImpl implements LdapService {
 
-    @Autowired
-    private LDAPConnection lc;
+    private LDAPConnection lc = new LDAPConnection();
 
     @Override
     public Boolean login(String user, String password) {
