@@ -24,7 +24,7 @@ public class SessionController {
     @Autowired
     private SessionService sessionService;
 
-    @RequestMapping(value = "validate", method = RequestMethod.POST,
+    @RequestMapping(value = "validate", method = RequestMethod.GET,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TokenValidDTO> validateToken(@RequestBody TokenDTO tokenDto) {
@@ -33,7 +33,7 @@ public class SessionController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "destroy", method = RequestMethod.POST,
+    @RequestMapping(value = "destroy", method = RequestMethod.DELETE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<TokenValidDTO> destroyToken(@RequestBody TokenDTO tokenDto) {

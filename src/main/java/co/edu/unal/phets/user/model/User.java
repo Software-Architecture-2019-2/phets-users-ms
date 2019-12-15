@@ -61,20 +61,17 @@ public class User implements Serializable {
     @Column
     private String password;
 
-    @Size(min = 8, max = 300)
+    @Size(min = 1, max = 300)
     @Column
     private String description;
 
-    @NotNull
     @Size(min = 3, max = 30)
     @Column
     private String city;
 
-    @NotNull
     @Column
     private Double latitude;
 
-    @NotNull
     @Column
     private Double longitude;
 
@@ -95,7 +92,7 @@ public class User implements Serializable {
     private Country country;
 
     @JsonIgnore
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     private List<Session> sessions;
 
 }

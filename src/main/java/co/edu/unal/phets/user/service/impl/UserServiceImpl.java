@@ -3,6 +3,7 @@ package co.edu.unal.phets.user.service.impl;
 import co.edu.unal.phets.user.model.User;
 import co.edu.unal.phets.user.repository.UserRepository;
 import co.edu.unal.phets.user.service.UserService;
+import co.edu.unal.phets.user.util.BCryptUtil;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private BCryptUtil bCryptUtil;
+    
     @Autowired
     private UserRepository userRepository;
 
@@ -44,7 +48,9 @@ public class UserServiceImpl implements UserService {
         Optional<User> savedOpt = userRepository.findByUsername(username);
         if (savedOpt.isPresent()) {
             User saved = savedOpt.get();
-            BeanUtils.copyProperties(user, saved, "creation", "confirmed", "user");
+            String encryptedPass = bCryptUtil.encryptPassword(user.getPassword());
+            user.setPassword(encryptedPass);
+            BeanUtils.copyProperties(user, saved, "id", "creation", "confirmed", "user");
             User updated = userRepository.save(saved);
             return updated;
         }

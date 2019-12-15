@@ -12,5 +12,5 @@ public interface AuthService {
     public Optional<String> login(String username, String password);
     
     public User register(User user);
-    
+        
 }

@@ -1,5 +1,11 @@
 FROM openjdk:8-jdk-slim
 
-COPY target/phets-users-ms-1.jar /app.jar
+COPY . /app
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+WORKDIR /app
+
+RUN ./mvnw package
+
+EXPOSE 4006
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","target/phets-users-ms-1.jar"]
