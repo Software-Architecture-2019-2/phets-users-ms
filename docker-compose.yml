@@ -33,7 +33,7 @@ services:
       MYSQL_USER: phets-user
       MYSQL_PASSWORD: phets-password
     ports:
-      - "3006:3306"
+      - "3008:3306"
 
 volumes:
   phets-users-db:
